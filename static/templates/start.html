@@ -1,0 +1,65 @@
+<form role="form" 
+>
+	<div id="talking_div" style="min-height: 70px; height: 100%;" 
+		class="panel panel-default"
+		ng-class="{
+			csspinner: is_speak_disabled(),
+			line: is_speak_disabled(),
+			'back-and-forth': is_speak_disabled(),
+			grow: is_speak_disabled()
+		}"
+	>
+		<div class="panel-body">
+			<div class="form-group" >
+				<input type="button" class="btn btn-lg btn-warning pull-right" value="New Word" ng-disabled="speak_disabled == 'true'" ng-click="new_word()" >
+				<a class="btn btn-lg btn-primary" ng-click="speak()" ng-disabled="speak_disabled == 'true'" >Speak Word</a>
+				<input type="button" class="btn btn-lg " value="Definition " id="definition_btn" ng-click="speak_definition()" ng-disabled="speak_disabled == 'true'" >
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label for="spell_word"><h3 style="margin-top: 10px;" >Spell Word</h3></label>
+		<input type="text" id="spell_word" class="form-control" ng-model="word_guess" ng-change="check_spelling()" autocomplete="off" />
+	</div>
+	
+</form>
+
+<div class="panel panel-default" ng-class="{'hide': hide_definition()}">
+	<!-- 
+	<div class="panel-body animate">
+		{{definition}}
+	</div>
+	<hr/>
+	-->
+	<div style="height: 100px; background-color: lightgrey;">
+		<carousel interval="-1" disable-animation="true" >
+			<slide ng-repeat="def_data in definitions" active="slide.active">
+				<div class="carousel_item" >
+					<div style="margin:auto; width: 70%; overflow: auto;" >
+						<h5 style="padding-top: 10px;" >{{$index+1}}/{{definitions.length}}. [ {{def_data.partOfSpeech}} ] : {{def_data.text}}</h5>
+						
+					</div>
+				</div>
+			</slide>
+		</carousel>
+	</div>
+</div>
+
+
+<ul class="list-group">
+	<li ng-repeat="answer in answers" class="list-group-item animate" >
+		
+		<h4>
+			<span class="glyphicon " 
+			ng-class="{
+				'glyphicon-thumbs-up': answer_success(answer), 
+				'text-success': answer_success(answer),
+				'text-danger': answer_failed(answer),
+				'glyphicon-remove': answer_failed(answer)
+			}" ></span> 
+			{{answer.word}}
+			</h4>
+		<p class="definition" >{{answer.definition[0].text}}</p>
+	</li>
+</ul>
