@@ -10,7 +10,17 @@ angular.module('MainControllers', [])
 	$scope.word_guess = '';
 	$scope.answers = [];
 	
-	
+	$scope.voices = window.speechSynthesis.getVoices();
+	// wait on voices to be loaded before fetching list, see http://stackoverflow.com/a/22978802
+	window.speechSynthesis.onvoiceschanged = function() {
+		$scope.voices = window.speechSynthesis.getVoices();
+		$scope.voices.forEach(function(value, index) {
+			if(value.name == 'Chrome OS US English') {
+				$scope.voice = value;
+			}
+		})
+	};
+	$scope.voice = false;
 	
 	$scope.speak_buffer = [];
 	$scope.speak_semaphore = false;
@@ -30,8 +40,15 @@ angular.module('MainControllers', [])
 			var item = $scope.speak_buffer.shift();
 			var say = item.say;
 			console.log('saying: '+say);
-			
+			console.log($scope.voices.length);
+			if(!$scope.voices.length) {
+				say = 'Welcome to speak and spell';
+			}
 			var utterance = new SpeechSynthesisUtterance(say);
+			console.log($scope.voices);
+			if($scope.voice) {
+				utterance.voice = $scope.voice;
+			}
 			//utterance.rate = .3;
 			speechUtteranceChunker(utterance, 
 			{
@@ -59,94 +76,6 @@ angular.module('MainControllers', [])
 				item.callback();
 			});
 
-			
-			
-			
-			//var msg = new SpeechSynthesisUtterance(say);
-			//speechSynthesis.speak(msg);
-			/*
-			msg.onend = function(event)
-			{
-				console.log('done');
-				//console.log($scope.speak_buffer);
-				$scope.$apply(function()
-				{
-					$scope.speak_disabled = false;
-					$scope.speak_semaphore = false;
-				});
-				//console.log('speak_disabled');
-				//console.log($scope.speak_disabled)
-				
-				
-				if($scope.speak_buffer.length > 0)
-				{
-					setTimeout(function()
-					{
-						$scope.buffered_speak(false);
-					}, 10);
-				}
-				item.callback();
-			};
-			
-			*/
-			
-			/*
-			var all_done = function()
-			{
-				console.log('done');
-				//console.log($scope.speak_buffer);
-				$scope.$apply(function()
-				{
-					$scope.speak_disabled = false;
-					$scope.speak_semaphore = false;
-				});
-				//console.log('speak_disabled');
-				//console.log($scope.speak_disabled)
-				
-				
-				if($scope.speak_buffer.length > 0)
-				{
-					setTimeout(function()
-					{
-						$scope.buffered_speak(false);
-					}, 10);
-				}
-				item.callback();
-			};
-			
-			var url = 'http://translate.google.com/translate_tts?ie=UTF-8&q='+encodeURIComponent(say)+'&tl=en&total=1';
-			var audio = new Audio(url);
-			console.log(url);
-			audio.addEventListener('ended', all_done);
-			audio.oncanplay = function()
-			{
-				audio.play();
-			}
-			*/
-			/*
-			meSpeak.speak(say, meSpeak_options,
-			function()
-			{
-				console.log('done');
-				//console.log($scope.speak_buffer);
-				$scope.$apply(function()
-				{
-					$scope.speak_disabled = false;
-					$scope.speak_semaphore = false;
-				});
-				//console.log('speak_disabled');
-				//console.log($scope.speak_disabled)
-				
-				
-				if($scope.speak_buffer.length > 0)
-				{
-					setTimeout(function()
-					{
-						$scope.buffered_speak(false);
-					}, 10);
-				}
-				item.callback();
-			});*/
 		}
 	}
 	$scope.is_speak_disabled = function()
@@ -164,12 +93,7 @@ angular.module('MainControllers', [])
 	$scope.definitions = [];
 	$scope.hide_definition = function()
 	{ 
-		//console.log('show_definition, '+$scope.definition+' '+(typeof $scope.definition));
-		
 		var value = typeof $scope.definition == 'boolean';
-		//$scope.definition != 'false'; 
-		
-		//console.log(value);
 		return value; 
 	}
 	$scope.get_definition = function(word, callback)
@@ -177,16 +101,12 @@ angular.module('MainControllers', [])
 		callback = callback || noop;
 		if($scope.hide_definition)
 		{
-			//console.log('making call');
 			var url = 'http://api.wordnik.com/v4/word.json/'+word.toLowerCase()+'/definitions?api_key=27ee8c36f4fd2881b17060148560881d3d73eef5f87f1c26c';
-			//console.log(url);
 			$http.get(url)
 			.success(callback);
 		}
 		else
 		{
-			//console.log('using pre-set');
-			//console.log( $scope.hide_definition );
 			callback($scope.definitions);
 		}
 	}
@@ -211,28 +131,21 @@ angular.module('MainControllers', [])
 				data[0] = {};
 				data[0].text = 'Sorry, Not able to find a definition.';
 			}
-			
+
 			$scope.buffered_speak($scope.word+', '+data[0].text);
-			
+
 			$scope.definition = $scope.sanitize_definition(data[0].text);
 			$scope.definitions = data;
-			
+
 			$scope.definitions.forEach(function(element, index, array)
 			{
 				element.text = $scope.sanitize_definition(element.text);
-				//console.log(element.text);
 			});
-			
-			//console.log('$scope.definitions set');
-			//console.log($scope.definitions);
 		});
 	}
-	
-	
-	
+
 	$scope.new_word = function()
 	{
-		
 		$scope.get_definition($scope.word, function(data)
 		{
 			if($scope.answered == false)
@@ -257,13 +170,9 @@ angular.module('MainControllers', [])
 				$scope.word_id = data.id;
 				$scope.buffered_speak('Your New Word is, '+$scope.word);
 			});
-			
-			
 		});
-		
-		
 	}
-	
+
 	$scope.reset = function()
 	{
 		//console.log('reset called');
@@ -273,14 +182,14 @@ angular.module('MainControllers', [])
 		$scope.definition = false;
 		$scope.speak_buffer = [];
 	}
-	
+
 	$scope.word_guess_length = 0;
 	$scope.spoke = 0;
 	$scope.answered = false;
 	$scope.check_spelling = function()
 	{
 		//console.log($scope.word_guess);
-		
+
 		var length = $scope.word_guess.length;
 		if($scope.word_guess_length > length && length > 1)
 		{//something was deleted
@@ -299,7 +208,7 @@ angular.module('MainControllers', [])
 			if($scope.word_guess.toLowerCase() == $scope.word.toLowerCase() && $scope.answered == false)
 			{
 				$scope.answered = true;
-				
+
 				//meSpeak.speak(', '+$scope.word_guess.charAt(length-1)+' , '+$scope.word+', Correct. Great Job!', meSpeak_options,
 				var say = ', '+$scope.word_guess.charAt($scope.spoke)+' , '+$scope.word+', Correct. . . ';
 				var random_index = Math.floor(Math.random() * ($scope.congrats.length));
@@ -320,10 +229,10 @@ angular.module('MainControllers', [])
 							definitions: data,
 							success: true
 						});
-						
+
 						//console.log('success');
 						$scope.new_word();
-						
+
 					});
 				});
 			}
@@ -355,7 +264,7 @@ angular.module('MainControllers', [])
 			}
 		}
 	}
-	
+
 	$scope.answer_success = function(answer)
 	{
 		//console.log(answer); 
@@ -365,7 +274,7 @@ angular.module('MainControllers', [])
 		}
 		return false;
 	}
-	
+
 	$scope.answer_failed = function(answer)
 	{
 		//console.log(answer); 
@@ -375,18 +284,16 @@ angular.module('MainControllers', [])
 		}
 		return true;
 	}
-	
-	
+
 	//check to see if we can even say things
 	console.log('checking for feature '+document.documentElement.className);
 	if(document.documentElement.className.match('no-feature'))
 	{//can't say things, show them the use a better browser page
-		console.log('here');
-		//window.location.href = 'bad_browser';
+		console.log('bad browser detected');
 		$location.path('/bad_browser')
-		
+	} else {
+		$scope.buffered_speak('The Word is, , , '+$scope.word);
 	}
-	
 }])
 .controller('BadBrowserCtrl', ['$scope', '$http', function($scope) 
 {

@@ -1,20 +1,30 @@
-<form role="form" 
->
-	<div id="talking_div" style="min-height: 70px; height: 100%;" 
-		class="panel panel-default"
-		ng-class="{
-			csspinner: is_speak_disabled(),
-			line: is_speak_disabled(),
-			'back-and-forth': is_speak_disabled(),
-			grow: is_speak_disabled()
-		}"
+<form role="form" >
+	<div 
 	>
-		<div class="panel-body">
-			<div class="form-group" >
-				<input type="button" class="btn btn-lg btn-warning pull-right" value="New Word" ng-disabled="speak_disabled == 'true'" ng-click="new_word()" >
-				<a class="btn btn-lg btn-primary" ng-click="speak()" ng-disabled="speak_disabled == 'true'" >Speak Word</a>
-				<input type="button" class="btn btn-lg " value="Definition " id="definition_btn" ng-click="speak_definition()" ng-disabled="speak_disabled == 'true'" >
+		
+		<div class="row">
+			<div class="col-md-3 panel panel-default" >
+				<div class="panel-body" >
+					<div class="form-group-lg" >
+						<label>Voice</label><br/>
+						<select ng-model="voice" ng-options="voice.name for voice in voices"></select>
+					</div>
+				</div>
 			</div>
+			<div class="col-md-8 col-md-offset-1 panel panel-default" id="talking_div" style="min-height: 89px; height: 100%;" 
+				ng-class="{
+					csspinner: is_speak_disabled(),
+					line: is_speak_disabled(),
+					'back-and-forth': is_speak_disabled(),
+					grow: is_speak_disabled()
+				}">
+				<div class="panel-body" >
+					<input type="button" class="btn btn-lg btn-warning pull-right" value="New Word" ng-disabled="speak_disabled == 'true'" ng-click="new_word()" >
+					<a class="btn btn-lg btn-primary" ng-click="speak()" ng-disabled="speak_disabled == 'true'" >Speak Word</a>
+					<input type="button" class="btn btn-lg " value="Definition " id="definition_btn" ng-click="speak_definition()" ng-disabled="speak_disabled == 'true'" >
+				</div>
+			</div>
+
 		</div>
 	</div>
 	
@@ -63,3 +73,5 @@
 		<p class="definition" >{{answer.definition[0].text}}</p>
 	</li>
 </ul>
+
+

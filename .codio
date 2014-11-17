@@ -1,0 +1,17 @@
+{
+// Configure your Run and Preview buttons here.
+
+// Run button configuration
+  "commands": {
+	  "Install app engine": "parts install googleappengine php5 php5-apache2 php5-bcmath",
+        "Start app engine": "dev_appserver.py ./ --php_executable_path /home/codio/.parts/bin/php-cgi --host 0.0.0.0 --admin_host 0.0.0.0"
+  },
+
+// Preview button configuration
+  "preview": {
+        "Project Index (static)": "http://{{domain}}:8080/{{index}}",
+        "Current File (static)": "http://{{domain}}:8080/{{filepath}}",
+        "Box URL": "http://{{domain}}:3000/",
+        "Box URL SSL": "https://{{domain}}:9500/"
+  }
+}

@@ -1,5 +1,5 @@
-application: angular_speakandspell
-version: 1
+application: angularspeakandspell
+version: 2
 runtime: php
 api_version: 1
 threadsafe: true
