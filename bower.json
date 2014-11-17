@@ -1,0 +1,16 @@
+{
+  "name": "speakandspell",
+  "version": "2",
+  "homepage": "https://github.com/jamesjnadeau/angular_speakandspell",
+  "authors": [
+    "jamesjnadeau <james.nadeau@gmail.com>"
+  ],
+  "description": "speak and spell in angular.js",
+  "main": "static/index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular-material": "~0.5.1"
+  },
+  "directory" : "static/vendor"
+}

@@ -42,7 +42,7 @@ angular.module('MainControllers', [])
 			console.log('saying: '+say);
 			console.log($scope.voices.length);
 			if(!$scope.voices.length) {
-				say = 'Welcome to speak and spell';
+				say = 'Welcome to speak and spell. Press "speak word" to begin.';
 			}
 			var utterance = new SpeechSynthesisUtterance(say);
 			console.log($scope.voices);
@@ -202,7 +202,16 @@ angular.module('MainControllers', [])
 		{
 			$scope.word_guess_length = length;
 		}
-		$scope.congrats = ['Great Job','Good Work','Super','Awesome','Way To Go','Spectacular','Stupdendus','Amazing'];
+		$scope.congrats = [
+			'Great Job',
+			'Good Work',
+			'Super',
+			'Awesome',
+			'Way To Go',
+			'Spectacular',
+			'Stupdendus',
+			'Amazing'
+		];
 		if(length > 0)
 		{
 			if($scope.word_guess.toLowerCase() == $scope.word.toLowerCase() && $scope.answered == false)
