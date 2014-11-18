@@ -180,7 +180,7 @@ angular.module('MainControllers', [])
 						$mdDialog.cancel();
 					};
 				},
-				templateUrl: '/templates/description_dialog.html',
+				templateUrl: '/templates/definition_dialog.html',
 				targetEvent: ev,
 				locals: { data: data },
 				onComplete: afterShowAnimation

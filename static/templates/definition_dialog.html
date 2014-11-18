@@ -1,0 +1,12 @@
+<md-dialog>
+	<md-subheader class="roboto">Definitions</md-subheader>
+	<md-content>
+		<md-card ng-repeat="def_data in data" >
+			<p><b class="roboto right">{{$index+1}} / {{data.length}}</b>
+				<i> {{def_data.partOfSpeech}} </i>
+				<br/>
+				<span class="helvetica" >{{def_data.text}}</span>
+			</p>
+		</md-card>
+	</md-content>
+</md-dialog>
