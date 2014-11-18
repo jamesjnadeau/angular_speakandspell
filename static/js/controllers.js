@@ -2,7 +2,7 @@
 
 /* Controllers */
 angular.module('MainControllers', [])
-.controller('StartCtrl', ['$scope', '$http', '$location', function($scope, $http, $location) 
+.controller('StartCtrl', ['$scope', '$http', '$location', '$mdDialog', function($scope, $http, $location, $mdDialog) 
 {
 	$scope.word = 'Speak';
 	$scope.word_id = 0;
@@ -21,7 +21,31 @@ angular.module('MainControllers', [])
 		})
 	};
 	$scope.voice = false;
-	
+
+	$scope.voice_dialog = function(ev) {
+		var main_scope = $scope;
+		$mdDialog.show({
+			controller: function($scope, $mdDialog, voices, voice) {
+				$scope.voice = voice;
+				$scope.voices = voices;
+				$scope.cancel = function() {
+					$mdDialog.cancel();
+					console.log($scope.voice, main_scope);
+				};
+				$scope.use = function() {
+					main_scope.voice = $scope.voice;
+					$mdDialog.cancel();
+				};
+			},
+			templateUrl: '/templates/voice_dialog.html',
+			targetEvent: ev,
+			locals: { voices: $scope.voices, voice: $scope.voice },
+			onComplete: function(scope, element, options) {
+				console.log('on complete')
+			}
+		});
+	}
+
 	$scope.speak_buffer = [];
 	$scope.speak_semaphore = false;
 	$scope.speak_disabled = false;
@@ -42,7 +66,8 @@ angular.module('MainControllers', [])
 			console.log('saying: '+say);
 			console.log($scope.voices.length);
 			if(!$scope.voices.length) {
-				say = 'Welcome to speak and spell. Press "speak word" to begin.';
+				//say = 'Welcome to speak and spell. Press "speak word" to begin.';
+				say = 'Hello ';
 			}
 			var utterance = new SpeechSynthesisUtterance(say);
 			console.log($scope.voices);
@@ -56,16 +81,11 @@ angular.module('MainControllers', [])
 			}, function(event)
 			{
 				console.log('done');
-				//console.log($scope.speak_buffer);
 				$scope.$apply(function()
 				{
 					$scope.speak_disabled = false;
 					$scope.speak_semaphore = false;
 				});
-				//console.log('speak_disabled');
-				//console.log($scope.speak_disabled)
-				
-				
 				if($scope.speak_buffer.length > 0)
 				{
 					setTimeout(function()
@@ -119,7 +139,42 @@ angular.module('MainControllers', [])
 		var replace = Array(find.length).join("*")
 		return temp.replace(re, replace);
 	}
-	
+
+	$scope.definition_dialog = function(ev) {
+		$scope.get_definition($scope.word, function(data) {
+
+			if(data.length == 0)
+			{
+				data = [];
+				data[0] = {};
+				data[0].text = 'Sorry, Not able to find a definition.';
+			}
+
+			$scope.buffered_speak($scope.word+', '+data[0].text);
+
+			data.forEach(function(element, index, array)
+			{
+				element.text = $scope.sanitize_definition(element.text);
+			});
+
+			function afterShowAnimation(scope, element, options) {
+				console.log('show', scope.data);
+			}
+			$mdDialog.show({
+				controller: function($scope, $mdDialog, data) {
+					$scope.data = data;
+					$scope.cancel = function() {
+						$mdDialog.cancel();
+					};
+				},
+				templateUrl: '/templates/description_dialog.html',
+				targetEvent: ev,
+				locals: { data: data },
+				onComplete: afterShowAnimation
+			});
+		});
+	};
+
 	$scope.speak_definition = function()
 	{
 		$scope.get_definition($scope.word, function(data)
@@ -144,10 +199,12 @@ angular.module('MainControllers', [])
 		});
 	}
 
+	$scope.hide_scoreboard = true;
 	$scope.new_word = function()
 	{
 		$scope.get_definition($scope.word, function(data)
 		{
+			$scope.hide_scoreboard = false;
 			if($scope.answered == false)
 			{
 				//console.log(data);
@@ -279,9 +336,9 @@ angular.module('MainControllers', [])
 		//console.log(answer); 
 		if(answer.success == true)
 		{
-			return true;
+			return 'green';
 		}
-		return false;
+		return 'red';
 	}
 
 	$scope.answer_failed = function(answer)
@@ -308,7 +365,6 @@ angular.module('MainControllers', [])
 {
 	
 }]);
-
 
 
 /*var Main = angular.module('Main', []);
