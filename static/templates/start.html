@@ -16,7 +16,7 @@
 		</div>
 	</div>
 </md-toolbar>
-<div layout="vertical" >
+<div id="main_content" layout="vertical" >
 	<md-card flex layout="row" layout-padding layout-align="center center"
 		ng-class="{ csspinner: is_speak_disabled(), line: is_speak_disabled(),
 			'back-and-forth': is_speak_disabled(),grow: is_speak_disabled()
@@ -37,15 +37,18 @@
 			</md-input>
 		</md-input-group>
 	</md-card>
+	
+	<md-card class="" ng-class="{'hide': hide_scoreboard}" id="scoreboard"
+		ng-repeat="answer in answers" class="animate" >
+		<h3 ng-class="{
+				'green-text': answer_success(answer),
+				'red-text': answer_failed(answer),
+			}" >{{answer.word}}</h3>
+		<p class="helvetica">{{answer.definition[0].text}}</p>
+	</md-card>
+	
 </div>
 
-<md-card class="" ng-class="{'hide': hide_scoreboard}" id="scoreboard"
-	ng-repeat="answer in answers" class="animate" >
-	<h3 ng-class="{
-			'green-text': answer_success(answer),
-			'red-text': answer_failed(answer),
-		}" >{{answer.word}}</h3>
-	<p class="helvetica">{{answer.definition[0].text}}</p>
-</md-card>
+
 
 

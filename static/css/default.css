@@ -78,3 +78,7 @@ animate.ng-leave.ng-leave-active {
 	.brand.navbar-brand { font-size: 16px; }
 	md-button { font-size:16px; text-transform: none;}
 }
+
+@media (min-width: 768px) {
+	#main_content { max-width: 1000px; margin: auto;}
+}
