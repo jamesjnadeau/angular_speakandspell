@@ -9,7 +9,20 @@ angular.module('MainControllers', [])
 	
 	$scope.word_guess = '';
 	$scope.answers = [];
-	
+
+	$scope.about = function(ev) {
+		var main_scope = $scope;
+		$mdDialog.show({
+			controller: function($scope, $mdDialog) {
+				$scope.cancel = function() {
+					$mdDialog.cancel();
+				};
+			},
+			templateUrl: '/templates/about_dialog.html',
+			targetEvent: ev,
+		});
+	}
+
 	$scope.voices = window.speechSynthesis.getVoices();
 	// wait on voices to be loaded before fetching list, see http://stackoverflow.com/a/22978802
 	window.speechSynthesis.onvoiceschanged = function() {
