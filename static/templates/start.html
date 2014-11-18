@@ -1,22 +1,25 @@
 <md-toolbar md-theme="green" >
-	<div layout="horizontal" layout-align="space-around" layout-padding>
-		<div>
-			<h2 class="md-toolbar-tools" class="dispaly: inline-block;">
-				<span class="navbar-brand brand" ng-click="about()" >Speak And Spell in Angular.js</span>
-			</h2>
-		</div>
+	<div class="limit_width" >
+		<div layout="horizontal" layout-align="space-around" layout-padding>
+			<div>
+				<h2 class="md-toolbar-tools" class="dispaly: inline-block;">
+					<span class="navbar-brand brand" ng-click="about()" >Speak And Spell in Angular.js</span>
+				</h2>
+			</div>
 
-		<div flex>
-			&nbsp;
-		</div>
-		<div>
-			<md-button class="md-fab helvetica" ng-click="voice_dialog()">
-				<span class="icon">&#xE6AA;</span>
-			</md-button>
+			<div flex>
+				&nbsp;
+			</div>
+			<div>
+				<md-button class="md-fab helvetica" ng-click="voice_dialog()">
+					<span class="icon">&#xE6AA;</span>
+				</md-button>
+			</div>
 		</div>
 	</div>
+	
 </md-toolbar>
-<div id="main_content" layout="vertical" >
+<div class="limit_width" layout="vertical" >
 	<md-card flex layout="row" layout-padding layout-align="center center"
 		ng-class="{ csspinner: is_speak_disabled(), line: is_speak_disabled(),
 			'back-and-forth': is_speak_disabled(),grow: is_speak_disabled()
