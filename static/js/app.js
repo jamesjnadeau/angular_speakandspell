@@ -1,20 +1,9 @@
 
 'use strict';
 
-
-//Declare mespeak
-meSpeak.loadConfig("/js/mespeak/mespeak_config.json");
-meSpeak.loadVoice("/js/mespeak/voices/en/en-us.json");
-var meSpeak_options = {
-	amplitude: 10,
-	wordgap: 10,
-	pitch: 50,
-	speed: 140,
-	variant: 'm7'
-};
-
 // Declare app level module which depends on filters, and services
 angular.module('Main', [
+	'ngMaterial',
 	'ngRoute',
 	'ui.event',
 	'ui.bootstrap',

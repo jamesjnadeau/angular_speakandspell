@@ -1,3 +1,6 @@
+body {
+	font-family: 'Gloria Hallelujah', cursive;
+}
 
 .brand.navbar-brand
 {
@@ -5,24 +8,7 @@
 	/*color: #2489ce;*/
 	color: white;
 	font-weight:bold;
-}
-
-img.content-secondary
-{
-	max-width: 100%;
-}
-
-h3.list-group-item
-{
-	font-family: 'Gloria Hallelujah', cursive;
-	background-color: #E6E6E6;
-}
-
-.btn
-{
-	/**/
-	font-family: 'Roboto Slab', serif;
-	
+	font-size: 28px;
 }
 
 .helvetica
@@ -30,39 +16,29 @@ h3.list-group-item
 	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-.navbar .active
-{
-	background-color: #E6E6E6;
+.roboto { font-family: 'Roboto Slab', serif;}
+
+.right { float: right; }
+.hide { display: none; }
+.margin { margin: 10px; }
+
+md-input-group.long { top: -20px; }
+md-input-group.long > label { font-size: 24px; }
+md-input-group.long > input { width: 100%; }
+
+label[for=spell_word] { font-size: 24px; }
+md-input-group > input.long { width: 100%; }
+
+md-button { font-size:18px; text-transform: none;}
+
+#definitions {
+	max-height: 150px;
+	overflow: auto;
 }
 
-.navbar, .dropdown-menu
-{
-	background-color: #143822;
-}
-
-.dropdown-menu li a,
-.dropdown-menu li a span
-{
-	color: white;
-}
-
-.container p
-{
-	max-width: 600px;
-}
-
-.hide
-{
-	display: none;
-}
-
-input.form-control 
-{
-	font-size: 20px;
-	height: 44px;
-}
-
-.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+.green-text { color: #259B24; }
+.red-text { color: #E51C23; }
+.icon { font-size: 32px; }
 
 animate.ng-enter,
 animate.ng-leave,
@@ -98,49 +74,7 @@ animate.ng-leave.ng-leave-active {
   padding-bottom: 0;
 }
 
-@media (max-width: 768px) 
-{
-	#definition_btn
-	{
-		float: right;
-		clear: both;
-		margin-top: 5px;
-		width: 127px;
-	}
-	
-	.brand.navbar-brand.pull-right
-	{
-		padding: 10px 0px 0px 0px;
-	}
-	.brand.navbar-brand.pull-right h4
-	{
-		font-size: 10px;
-		margin: 0px 0px 0px 0px;
-	}
-}
-
-@media (max-width: 445px) 
-{
-	.brand.navbar-brand.pull-right
-	{
-		display: none;
-	}
-}
-
-.carousel-indicators
-{
-	display: none;
-}
-
-div.carousel_item 
-{
-	background-color: lightgrey;
-	height:100px;
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
-p.definition
-{
-	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	font-size: 11px;
+@media (max-width: 768px) {
+	.brand.navbar-brand { font-size: 16px; }
+	md-button { font-size:16px; text-transform: none;}
 }
