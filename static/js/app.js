@@ -6,7 +6,6 @@ angular.module('Main', [
 	'ngMaterial',
 	'ngRoute',
 	'ui.event',
-	'ui.bootstrap',
 	'MainAnimations',
 	'MainControllers'
 ])

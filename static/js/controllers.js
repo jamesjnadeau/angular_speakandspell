@@ -96,9 +96,14 @@ angular.module('MainControllers', [])
 				console.log('done');
 				$scope.$apply(function()
 				{
-					$scope.speak_disabled = false;
 					$scope.speak_semaphore = false;
 				});
+				if(!$scope.speak_buffer.length) {
+					$scope.$apply(function()
+					{
+						$scope.speak_disabled = false;
+					});
+				}
 				if($scope.speak_buffer.length > 0)
 				{
 					setTimeout(function()

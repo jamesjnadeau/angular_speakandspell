@@ -22,7 +22,7 @@
 <div class="limit_width" layout="vertical" >
 	<md-card flex layout="row" layout-padding layout-align="center center"
 		ng-class="{ csspinner: is_speak_disabled(), line: is_speak_disabled(),
-			'back-and-forth': is_speak_disabled(),grow: is_speak_disabled()
+			'back-and-forth': is_speak_disabled(), grow: is_speak_disabled()
 		}">
 		<md-button flex class="md-raised margin" md-theme="green" ng-click="speak()" ng-disabled="speak_disabled == 'true'" >Speak</md-button>
 		<md-button flex class="md-raised margin md-primary" id="definition_btn" ng-click="definition_dialog()" ng-disabled="speak_disabled == 'true'" >Definition</md-button>
