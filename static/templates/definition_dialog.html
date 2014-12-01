@@ -1,11 +1,16 @@
-<md-dialog>
-	<md-subheader class="roboto">Definitions</md-subheader>
+<md-dialog ng-class="{ csspinner: is_speak_disabled(), line: is_speak_disabled(),
+			'back-and-forth': is_speak_disabled(), grow: is_speak_disabled()
+		}">>
+	<md-subheader class="roboto">Definitions <small>(touch a definition to hear it)</small></md-subheader>
 	<md-content>
 		<md-card ng-repeat="def_data in data" >
-			<p><b class="roboto right">{{$index+1}} / {{data.length}}</b>
+			<p>
+				<span ng-click="say_definition(def_data.text)" >
+				<b class="roboto right">{{$index+1}} / {{data.length}}</b>
 				<i> {{def_data.partOfSpeech}} </i>
 				<br/>
 				<span class="helvetica" >{{def_data.text}}</span>
+				</span>
 			</p>
 		</md-card>
 	</md-content>

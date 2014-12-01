@@ -127,6 +127,19 @@ angular.module('MainControllers', [])
 		$scope.buffered_speak('The Word is, , , '+$scope.word);
 	}
 	
+	$scope.say_definition = function(definition_text) {
+		console.log('speak_def', this, definition_text);
+		
+		var find = $scope.word.toLowerCase();
+		var re = new RegExp(Array(find.length).join("\\*"), 'g');
+		var temp = definition_text.toLowerCase();
+		var replace = find;
+		definition_text = temp.replace(re, replace);
+		$scope.buffered_speak(definition_text, function() {
+			console.log('definition done')
+		});
+	}
+	
 	$scope.definition = false;
 	$scope.definitions = [];
 	$scope.hide_definition = function()
@@ -179,15 +192,17 @@ angular.module('MainControllers', [])
 				console.log('show', scope.data);
 			}
 			$mdDialog.show({
-				controller: function($scope, $mdDialog, data) {
+				controller: function($scope, $mdDialog, data, say_definition, is_speak_disabled) {
 					$scope.data = data;
+					$scope.say_definition = say_definition;
+					$scope.is_speak_disabled = is_speak_disabled;
 					$scope.cancel = function() {
 						$mdDialog.cancel();
 					};
 				},
 				templateUrl: '/templates/definition_dialog.html',
 				targetEvent: ev,
-				locals: { data: data },
+				locals: { data: data, say_definition:$scope.say_definition, is_speak_disabled:$scope.is_speak_disabled },
 				onComplete: afterShowAnimation
 			});
 		});
