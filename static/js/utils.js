@@ -35,6 +35,7 @@ var speechUtteranceChunker = function (utt, settings, callback)
 	settings = settings || {};
 	var newUtt;
 	var txt = (settings && settings.offset !== undefined ? utt.text.substring(settings.offset) : utt.text);
+console.log('here', utt);
 	if (utt.voice && utt.voice.voiceURI === 'native') { // Not part of the spec
 		newUtt = utt;
 		newUtt.text = txt;
@@ -61,6 +62,7 @@ var speechUtteranceChunker = function (utt, settings, callback)
 		}
 		var chunk = chunkArr[0];
 		newUtt = new SpeechSynthesisUtterance(chunk);
+		newUtt.voice = utt.voice;
 		var x;
 		for (x in utt) {
 			if (utt.hasOwnProperty(x) && x !== 'text') {

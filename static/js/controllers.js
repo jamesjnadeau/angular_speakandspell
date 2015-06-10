@@ -2,7 +2,7 @@
 
 /* Controllers */
 angular.module('MainControllers', [])
-.controller('StartCtrl', ['$scope', '$http', '$location', '$mdDialog', function($scope, $http, $location, $mdDialog) 
+.controller('StartCtrl', function($scope, $http, $location, $mdDialog, BufferdSpeach, WordDefinition ) 
 {
 	$scope.word = 'Speak';
 	$scope.word_id = 0;
@@ -23,16 +23,6 @@ angular.module('MainControllers', [])
 		});
 	}
 
-	$scope.voices = window.speechSynthesis.getVoices();
-	// wait on voices to be loaded before fetching list, see http://stackoverflow.com/a/22978802
-	window.speechSynthesis.onvoiceschanged = function() {
-		$scope.voices = window.speechSynthesis.getVoices();
-		$scope.voices.forEach(function(value, index) {
-			if(value.name == 'Chrome OS US English') {
-				$scope.voice = value;
-			}
-		})
-	};
 	$scope.voice = false;
 
 	$scope.voice_dialog = function(ev) {
@@ -43,10 +33,12 @@ angular.module('MainControllers', [])
 				$scope.voices = voices;
 				$scope.cancel = function() {
 					$mdDialog.cancel();
-					console.log($scope.voice, main_scope);
+					//console.log($scope.voice, main_scope);
 				};
 				$scope.use = function() {
-					main_scope.voice = $scope.voice;
+					//main_scope.voice = $scope.voice;
+					BufferdSpeach.set_voice($scope.voice);
+					
 					$mdDialog.cancel();
 				};
 			},
@@ -54,11 +46,11 @@ angular.module('MainControllers', [])
 			targetEvent: ev,
 			locals: { voices: $scope.voices, voice: $scope.voice },
 			onComplete: function(scope, element, options) {
-				console.log('on complete')
+				//console.log('on complete')
 			}
 		});
 	}
-
+/*
 	$scope.speak_buffer = [];
 	$scope.speak_semaphore = false;
 	$scope.speak_disabled = false;
@@ -108,7 +100,8 @@ angular.module('MainControllers', [])
 				{
 					setTimeout(function()
 					{
-						$scope.buffered_speak(false);
+						//$scope.buffered_speak(false);
+						BufferdSpeach.say(false);
 					}, 10);
 				}
 				item.callback();
@@ -116,6 +109,14 @@ angular.module('MainControllers', [])
 
 		}
 	}
+*/
+	$scope.$watch(function () { 
+		return BufferdSpeach.speak_disabled; 
+	}, function (newVal, oldVal) {
+		if (typeof newVal !== 'undefined') {
+			$scope.speak_disabled = BufferdSpeach.speak_disabled;
+		}
+	});
 	$scope.is_speak_disabled = function()
 	{
 		//console.log($scope.speak_disabled);
@@ -124,7 +125,8 @@ angular.module('MainControllers', [])
 	
 	$scope.speak = function()
 	{
-		$scope.buffered_speak('The Word is, , , '+$scope.word);
+		//$scope.buffered_speak('The Word is, , , '+$scope.word);
+		BufferdSpeach.say('The Word is, , , '+$scope.word);
 	}
 	
 	$scope.say_definition = function(definition_text) {
@@ -135,7 +137,8 @@ angular.module('MainControllers', [])
 		var temp = definition_text.toLowerCase();
 		var replace = find;
 		definition_text = temp.replace(re, replace);
-		$scope.buffered_speak(definition_text, function() {
+		//$scope.buffered_speak(definition_text, function() {
+		BufferdSpeach.say(definition_text, function() {
 			console.log('definition done')
 		});
 	}
@@ -161,6 +164,7 @@ angular.module('MainControllers', [])
 			callback($scope.definitions);
 		}
 	}
+	//$scope.get_definition = WordDefinition.get;
 	
 	$scope.sanitize_definition = function(def)
 	{
@@ -181,7 +185,8 @@ angular.module('MainControllers', [])
 				data[0].text = 'Sorry, Not able to find a definition.';
 			}
 
-			$scope.buffered_speak($scope.word+', '+data[0].text);
+			//$scope.buffered_speak($scope.word+', '+data[0].text);
+			BufferdSpeach.say($scope.word+', '+data[0].text);
 
 			data.forEach(function(element, index, array)
 			{
@@ -220,7 +225,8 @@ angular.module('MainControllers', [])
 				data[0].text = 'Sorry, Not able to find a definition.';
 			}
 
-			$scope.buffered_speak($scope.word+', '+data[0].text);
+			//$scope.buffered_speak($scope.word+', '+data[0].text);
+			BufferdSpeach.say($scope.word+', '+data[0].text);
 
 			$scope.definition = $scope.sanitize_definition(data[0].text);
 			$scope.definitions = data;
@@ -258,7 +264,8 @@ angular.module('MainControllers', [])
 				//console.log(data);
 				$scope.word = data.word.trim();
 				$scope.word_id = data.id;
-				$scope.buffered_speak('Your New Word is, '+$scope.word);
+				//$scope.buffered_speak('Your New Word is, '+$scope.word);
+				BufferdSpeach.say('Your New Word is, '+$scope.word);
 			});
 		});
 	}
@@ -313,41 +320,35 @@ angular.module('MainControllers', [])
 				var random_index = Math.floor(Math.random() * ($scope.congrats.length));
 				console.log(random_index)
 				say += ' '+$scope.congrats[random_index]+'! , , , '
-				$scope.buffered_speak(say,
-				function()
-				{
-					var word = $scope.word;
-					$scope.get_definition($scope.word, function(data)
+				//$scope.buffered_speak(say,
+				BufferdSpeach.say(say,
+					function()
 					{
-						//console.log(data);
-						$scope.answers.unshift(
+						var word = $scope.word;
+						$scope.get_definition($scope.word, function(data)
 						{
-							word: word,
-							//word_id: $scope.word_id,
-							definition: data,
-							definitions: data,
-							success: true
+							//console.log(data);
+							$scope.answers.unshift(
+							{
+								word: word,
+								//word_id: $scope.word_id,
+								definition: data,
+								definitions: data,
+								success: true
+							});
+
+							//console.log('success');
+							$scope.new_word();
+
 						});
-
-						//console.log('success');
-						$scope.new_word();
-
 					});
-				});
 			}
 			else if (length > $scope.word.length)
 			{
 				$scope.speak_buffer = []
 				$scope.reset();
-				$scope.buffered_speak('In Correct, Try again!', function()
-				{
-					/*
-					$scope.answered = false;
-					$scope.speak_buffer = []
-					$scope.spoke = 0;
-					*/
-					//console.log('incorrect');
-				});
+				BufferdSpeach.say('In Correct, Try again!');
+				
 			}
 			else
 			{
@@ -358,7 +359,8 @@ angular.module('MainControllers', [])
 				{
 					letter = ' AE ';
 				}
-				$scope.buffered_speak(letter+' , ');
+				//$scope.buffered_speak(letter+' , ');
+				BufferdSpeach.say(letter+' , ');
 				$scope.spoke++;
 			}
 		}
@@ -391,25 +393,21 @@ angular.module('MainControllers', [])
 		console.log('bad browser detected');
 		$location.path('/bad_browser')
 	} else {
-		$scope.buffered_speak('The Word is, , , '+$scope.word);
+		//$scope.buffered_speak('The Word is, , , '+$scope.word);
+		$scope.voices = window.speechSynthesis.getVoices();
+		// wait on voices to be loaded before fetching list, see http://stackoverflow.com/a/22978802
+		window.speechSynthesis.onvoiceschanged = function() {
+			$scope.voices = window.speechSynthesis.getVoices();
+			$scope.voices.forEach(function(value, index) {
+				if(value.name == 'Chrome OS US English') {
+					BufferdSpeach.set_voice(value);
+					BufferdSpeach.say('The Word is, , , '+$scope.word);
+				}
+			})
+		};
 	}
-}])
+})
 .controller('BadBrowserCtrl', ['$scope', '$http', function($scope) 
 {
 	
 }]);
-
-
-/*var Main = angular.module('Main', []);
-
-Main.controller('MainController', function ($scope) {
-  $scope.phones = [
-    {'name': 'Nexus S',
-     'snippet': 'Fast just got faster with Nexus S.'},
-    {'name': 'Motorola XOOM™ with Wi-Fi',
-     'snippet': 'The Next, Next Generation tablet.'},
-    {'name': 'MOTOROLA XOOM™',
-     'snippet': 'The Next, Next Generation tablet.'}
-  ];
-});
-*/
